@@ -45,6 +45,7 @@ button,.button{
 }
 button:hover,.button:hover{transform:translateY(-2px);filter:brightness(1.08)}
 button.secondary{background:#282044;color:var(--text);box-shadow:none;border:1px solid rgba(255,255,255,.1)}
+.tracker-download{background:#282044;color:var(--text);box-shadow:none;border:1px solid rgba(255,255,255,.1)}
 .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .quizMeta{display:flex;justify-content:space-between;color:var(--muted);font-size:.92rem;margin-bottom:18px}
 .progress{height:7px;background:#2b2345;border-radius:99px;overflow:hidden;margin-bottom:30px}
@@ -82,7 +83,7 @@ code{color:var(--cyan)}
     <div class="eyebrow">classified birthday protocol // level 01</div>
     <h1>Happy Birthday, <span class="gradient" id="birthdayName">ROOMIE</span> 🎂</h1>
     <p class="big">Unfortunately, your present is behind a highly sophisticated cybersecurity verification system.</p>
-    <p>By “highly sophisticated,” I mean five questions that you absolutely have no excuse to get wrong.</p>
+    <p>By “highly sophisticated,” I mean six questions that you absolutely have no excuse to get wrong.</p>
     <button onclick="startQuiz()">Accept the challenge 😎</button>
   </section>
 
@@ -99,7 +100,7 @@ code{color:var(--cyan)}
   <section class="screen" id="results">
     <div class="eyebrow">assessment complete</div>
     <h2>Your extremely serious cyber score:</h2>
-    <div class="score gradient"><span id="scoreOut">0</span>/5</div>
+    <div class="score gradient"><span id="scoreOut">0</span>/<span id="scoreTotal">6</span></div>
     <p class="big" id="scoreMessage"></p>
     <p>You have unlocked one (1) birthday present. No refunds.</p>
     <button onclick="showScreen('gift')">Claim my very serious reward →</button>
@@ -139,7 +140,8 @@ code{color:var(--cyan)}
       <p>And no, I cannot attend the interviews for you. I checked.</p>
     </div>
     <div class="row" style="margin-top:22px">
-      <a class="button" href="job_tracker.xlsx" download>Open the unemployment escape plan 🚀</a>
+      <button onclick="openTracker()">Open the unemployment escape plan 🚀</button>
+      <a class="button tracker-download" href="./job_tracker.xlsx" target="_blank" rel="noopener">Direct Excel file ↗</a>
       <button class="secondary" onclick="confettiBurst()">More confetti because birthday 🎉</button>
     </div>
     <p class="tiny" style="margin-top:18px">P.S. Sponsorship rules can change by role, so the tracker tells you what is confirmed vs. what still needs a quick check.</p>
@@ -149,7 +151,7 @@ code{color:var(--cyan)}
 <script>
 const CONFIG = {
   // Change this one line before hosting:
-  birthdayName: "ROOMIE"
+  birthdayName: "Aarushi"
 };
 document.getElementById("birthdayName").textContent = CONFIG.birthdayName;
 
@@ -188,6 +190,13 @@ const questions = [
     correct:2,
     good:"Correct. The password manager may now adopt you. 🏆",
     bad:"We were so close to graduating peacefully."
+  },
+  {
+    q:"Okay, final and most important question: Who is the best roommate you have ever had?",
+    a:["CVANI","SK","skarthikeyan39","All of the above"],
+    allCorrect:true,
+    good:"CORRECT. Obviously. There was literally no wrong answer here. 😌🏆",
+    bad:"Impossible. This message should never appear."
   }
 ];
 
@@ -218,12 +227,19 @@ function renderQuestion(){
 function answer(i,button){
   if(locked)return; locked=true;
   const q=questions[qIndex];
+  const isCorrect=q.allCorrect || i===q.correct;
   [...document.querySelectorAll(".answer")].forEach((b,idx)=>{
     b.disabled=true;
-    if(idx===q.correct)b.classList.add("correct");
+    if(!q.allCorrect && idx===q.correct)b.classList.add("correct");
   });
-  if(i===q.correct){score++;document.getElementById("feedback").textContent=q.good;}
-  else{button.classList.add("wrong");document.getElementById("feedback").textContent=q.bad;}
+  if(isCorrect){
+    score++;
+    button.classList.add("correct");
+    document.getElementById("feedback").textContent=q.good;
+  } else {
+    button.classList.add("wrong");
+    document.getElementById("feedback").textContent=q.bad;
+  }
   document.getElementById("liveScore").textContent=`Score: ${score}`;
   document.getElementById("nextBtn").textContent=qIndex===questions.length-1?"Reveal my score →":"Next →";
   document.getElementById("nextBtn").classList.remove("hidden");
@@ -233,8 +249,8 @@ function nextQuestion(){
   if(qIndex<questions.length){renderQuestion();}
   else{
     document.getElementById("scoreOut").textContent=score;
-    let msg=score===5?"Certified Cybersecurity Genius™. Suspiciously competent."
-      :score>=4?"Degree successfully detected. Recruiters may proceed."
+    let msg=score===questions.length?"Certified Cybersecurity Genius™ + Certified Best-Roommate Expert™."
+      :score>=5?"Degree successfully detected. Recruiters may proceed."
       :score>=3?"Acceptable. The firewall is allowing you through."
       :"Hmm. Birthday immunity has saved you from remediation training.";
     document.getElementById("scoreMessage").textContent=msg;
@@ -243,6 +259,16 @@ function nextQuestion(){
 }
 function openMystery(){confettiBurst(35);showScreen("mystery");}
 function finalReveal(){confettiBurst(120);showScreen("final");}
+function openTracker(){
+  const trackerUrl = new URL("./job_tracker.xlsx", window.location.href).href;
+  if(window.location.protocol === "http:" || window.location.protocol === "https:"){
+    const viewerUrl = "https://view.officeapps.live.com/op/view.aspx?src=" + encodeURIComponent(trackerUrl);
+    const opened = window.open(viewerUrl, "_blank");
+    if(!opened){ window.location.href = trackerUrl; }
+  } else {
+    window.location.href = "./job_tracker.xlsx";
+  }
+}
 function confettiBurst(count=80){
   const colors=["#9b7cff","#ff79b9","#77e4ff","#7cf0b2","#ffd978","#ffffff"];
   for(let i=0;i<count;i++){
