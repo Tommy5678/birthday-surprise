@@ -135,13 +135,13 @@ code{color:var(--cyan)}
     <div class="eyebrow">the actual reveal</div>
     <h1 style="font-size:clamp(2.2rem,7vw,4.5rem)">SURPRISE — I MADE OUR <span class="gradient">JOB HUNTING</span> LESS PAINFUL 😭</h1>
     <div class="final-card">
-      <p class="big">I made a tracker with 65 live, re-checked roles, graduation timing, visa notes, priorities, and application status.</p>
+      <p class="big">I made a tracker with live, re-checked roles, graduation timing, visa notes, priorities, and application status.</p>
       <p>I handled the annoying research half. Your half is unfortunately still <strong>clicking “Apply.”</strong></p>
       <p>And no, I cannot attend the interviews for you. I checked.</p>
     </div>
     <div class="row" style="margin-top:22px">
       <button onclick="openTracker()">Open the unemployment escape plan 🚀</button>
-      <a class="button tracker-download" href="./job_tracker.xlsx" target="_blank" rel="noopener">Direct Excel file ↗</a>
+      <a class="button tracker-download" href="https://gtvault-my.sharepoint.com/:x:/g/personal/skarthikeyan39_gatech_edu/IQDSxUx_6G6KRqOoeNMdhUfRAUK5oWiSyosk8h0OGxEZ67s?e=1HU79q" target="_blank" rel="noopener">Open tracker in Excel ↗</a>
       <button class="secondary" onclick="confettiBurst()">More confetti because birthday 🎉</button>
     </div>
     <p class="tiny" style="margin-top:18px">P.S. Sponsorship rules can change by role, so the tracker tells you what is confirmed vs. what still needs a quick check.</p>
@@ -250,7 +250,7 @@ function nextQuestion(){
   else{
     document.getElementById("scoreOut").textContent=score;
     let msg=score===questions.length?"Certified Cybersecurity Genius™ + Certified Best-Roommate Expert™."
-      :score>=5?"Degree successfully detected. Recruiters may proceed."
+      :score>=5?"Cybersecurity instincts detected. Access granted. 😌"
       :score>=3?"Acceptable. The firewall is allowing you through."
       :"Hmm. Birthday immunity has saved you from remediation training.";
     document.getElementById("scoreMessage").textContent=msg;
@@ -260,14 +260,9 @@ function nextQuestion(){
 function openMystery(){confettiBurst(35);showScreen("mystery");}
 function finalReveal(){confettiBurst(120);showScreen("final");}
 function openTracker(){
-  const trackerUrl = new URL("./job_tracker.xlsx", window.location.href).href;
-  if(window.location.protocol === "http:" || window.location.protocol === "https:"){
-    const viewerUrl = "https://view.officeapps.live.com/op/view.aspx?src=" + encodeURIComponent(trackerUrl);
-    const opened = window.open(viewerUrl, "_blank");
-    if(!opened){ window.location.href = trackerUrl; }
-  } else {
-    window.location.href = "./job_tracker.xlsx";
-  }
+  const trackerUrl = "https://gtvault-my.sharepoint.com/:x:/g/personal/skarthikeyan39_gatech_edu/IQDSxUx_6G6KRqOoeNMdhUfRAUK5oWiSyosk8h0OGxEZ67s?e=1HU79q";
+  const opened = window.open(trackerUrl, "_blank", "noopener");
+  if(!opened){ window.location.href = trackerUrl; }
 }
 function confettiBurst(count=80){
   const colors=["#9b7cff","#ff79b9","#77e4ff","#7cf0b2","#ffd978","#ffffff"];
